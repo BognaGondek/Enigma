@@ -4,18 +4,23 @@
 class Rotor : public MechanicalPart
 {
 public:
-	bool didImove;
 	Rotor();
 	Rotor(int n, int* characteristicAlphabet);
 	Rotor(const Rotor& orig);
+	Rotor(Rotor&& other);
 	Rotor& operator=(const Rotor& right);
+	Rotor& operator=(Rotor&& right);
+
 	void rotate(Rotor& right);
+	int characteristicToBasic(int index);
+	int basicToCharacteristic(int index);
+	
 	void setPosition(int numberOfTimes);
-	int CharacteristicToBasic(int index);
-	int BasicToCharacteristic(int index);
-	void SetFirstRotor(bool firstRotor);
-	void SetIsRatcherUncovered();
-	void SetRotationTransferPoints(int* rotationTransferPoints, int numberOfRotationTransferPoints);
+	void setFirstRotor(bool firstRotor);
+	void setIsRatcherUncovered();
+	void setRotationTransferPoints(int* rotationTransferPoints);
+	void setDidImove(bool didImove);
+
 	~Rotor();
 
 #if TEST == true
@@ -23,12 +28,15 @@ public:
 #endif
 
 private:
+	int numberOfRotations;
 	int* characteristicAlphabet;
 	int* rotationTransferPoints;
 	int numberOfRotationTransferPoints;
 	bool firstRotor;
 	bool isRatchetUncovered;
+	bool didImove;
 
-	bool wasRotationPointHit();
+	bool wasRotationPointHit() const;
 	void rotateOnePosition();
+	void setRotationTransferPoint(int index, int element);
 };

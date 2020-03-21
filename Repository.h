@@ -16,7 +16,7 @@ public:
     Repository();
     Repository(int n, int m);
     void addRotor(int* characteristicAlphabet);
-    void setRotorTransferPoint(int numberOfRotationTransferPoints, int* rotationTransferPoints);
+    void setRotorTransferPoint(int* rotationTransferPoints);
     void preparePlaceForReflectors(int l);
     void addReflector(int* characteristicAlphabet);
     ~Repository();

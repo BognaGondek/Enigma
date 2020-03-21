@@ -12,7 +12,7 @@ Reflector::Reflector(int n, int* characteristicAlphabet)
 {
 	length = n;
 	basicAlphabet = new int[length];
-	basicAlphabet = CreateBasicAlphabet(length);
+	basicAlphabet = createBasicAlphabet(length);
 	this->characteristicAlphabet = new int[length];
 	for (int i = 0; i < length; i++)
 	{
@@ -24,12 +24,27 @@ Reflector::Reflector(const Reflector& orig)
 {
 	length = orig.length;
 	basicAlphabet = new int[length];
-	basicAlphabet = CreateBasicAlphabet(length);
+	basicAlphabet = createBasicAlphabet(length);
 	characteristicAlphabet = new int[length];
 	for (int i = 0; i < length; i++)
 	{
 		characteristicAlphabet[i] = orig.characteristicAlphabet[i];
 	}
+}
+
+Reflector::Reflector(Reflector&& other)
+{
+	length = other.length;
+	basicAlphabet = new int[length];
+	basicAlphabet = createBasicAlphabet(length);
+	characteristicAlphabet = new int[length];
+	for (int i = 0; i < length; i++)
+	{
+		characteristicAlphabet[i] = other.characteristicAlphabet[i];
+	}
+	other.basicAlphabet = nullptr;
+	other.characteristicAlphabet = nullptr;
+	other.length = 0;
 }
 
 Reflector& Reflector::operator=(const Reflector& right)
@@ -41,22 +56,32 @@ Reflector& Reflector::operator=(const Reflector& right)
 	return *this;
 }
 
-int Reflector::CharacteristicToBasic(int index)
+Reflector& Reflector::operator=(Reflector&& right)
 {
-	int n = FindElement(characteristicAlphabet, index);
-	n = FindIndex(basicAlphabet, n);
-	return n;
+	std::swap(basicAlphabet, right.basicAlphabet);
+	std::swap(characteristicAlphabet, right.characteristicAlphabet);
+	std::swap(length, right.length);
+	return *this;
 }
 
-int Reflector::BasicToCharacteristic(int index)
+int Reflector::characteristicToBasic(int index)
 {
-	int n = FindElement(basicAlphabet, index);
-	n = FindIndex(characteristicAlphabet, n);
+	int n = findElement(characteristicAlphabet, index);
+
+#if TEST == true
+	printf(" Reflector:\n found element: %d\n", n);
+#endif
+
+	n = findIndexBinary(basicAlphabet, n);
+
+#if TEST == true
+	printf("Index: %d\n\n", n);
+#endif
+
 	return n;
 }
 
 #if TEST == true
-
 void Reflector::print()
 {
 	printf("Reflector:\n");
@@ -72,8 +97,6 @@ void Reflector::print()
 	}
 	printf("\n\n");
 }
-
-
 #endif
 
 Reflector::~Reflector()

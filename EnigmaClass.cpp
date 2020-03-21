@@ -1,13 +1,14 @@
 ﻿#include "Enigma.h"
 #include <iostream>
 
+#define MAX_MOVING_ROTOR_INDEX 2
+
 Enigma::Enigma()
 {
     entryWheel = EntryWheel();
     reflector = Reflector();
     rotorsNumber = 0;
     rotors = nullptr;
-    repository = Repository();
     message = nullptr;
     messageSize = 0;
     currrentCodeLength = 0;
@@ -21,8 +22,9 @@ Enigma::Enigma(Repository& repository, int* input)
     entryWheel = repository.entryWheel;
     
 #if TEST == true
+    printf("PREPARING\n");
     entryWheel.print();
-    #endif
+#endif
 
     rotors = new Rotor[input[0]];
     for (int i = 0, j = 1;
@@ -33,20 +35,19 @@ Enigma::Enigma(Repository& repository, int* input)
         rotors[i].setPosition(input[j + 1] - 1);
         if (i == 0)
         {
-            rotors[i].SetFirstRotor(true);
+            rotors[i].setFirstRotor(true);
         }
-        rotors[i].SetIsRatcherUncovered();
+        rotors[i].setIsRatcherUncovered();
 
 #if TEST == true
-        rotors[i].print();
-        printf("PREP\n");
+     rotors[i].print();
 #endif
 
     }
     reflector = repository.reflectors[input[inputLength - 1]];
 
 #if TEST == true
-   reflector.print();
+  reflector.print();
 #endif
 
     message = nullptr;
@@ -55,35 +56,7 @@ Enigma::Enigma(Repository& repository, int* input)
     currrentCodeLength = 0;
 }
 
-Enigma::Enigma(const Enigma& orig)
-{
-    entryWheel = orig.entryWheel;
-    reflector = orig.reflector;
-    rotorsNumber = orig.rotorsNumber;
-    rotors = orig.rotors;
-    repository = orig.repository;
-    message = orig.message;
-    messageSize = orig.messageSize;
-    currrentCodeLength = orig.currrentCodeLength;
-    code = orig.code;
-}
-
-Enigma& Enigma::operator=(const Enigma& right)
-{
-    Enigma enigma = right;
-    std::swap(entryWheel, enigma.entryWheel);
-    std::swap(reflector, enigma.reflector);
-    std::swap(rotorsNumber, enigma.rotorsNumber);
-    std::swap(rotors, enigma.rotors);
-    std::swap(repository, enigma.repository);
-    std::swap(message, enigma.message);
-    std::swap(messageSize, enigma.messageSize);
-    std::swap(currrentCodeLength, enigma.currrentCodeLength);
-    std::swap(code, enigma.code);
-    return *this;
-}
-
-void Enigma::SetMessage(int* message)
+void Enigma::setMessage(int* message)
 {
     messageSize = messageLength(message);
     this->message = new int[messageSize];
@@ -94,21 +67,30 @@ void Enigma::SetMessage(int* message)
     code = new int[messageSize];
 }
 
-void Enigma::SetCode()
+void Enigma::setCode()
 {   
-    for (int i = 0; i < messageSize; i++)
+    rotors[0].setPosition(1);
+    setOneNumber();
+    //rotors[0].print();
+    //rotors[1].print();
+    for (int i = 1; i < messageSize; i++)
     {
-        SetOneNumber();
-        printf("%d\n", i);
-        rotors[0].print();
-        //rotors[1].print();
-        //rotors[2].print();
-        printf("\n");
+        moveRotors();
+        setOneNumber();
+
+#if TEST == true
+        for (int j = 0; j < rotorsNumber; j++)
+        {
+            this->rotors[j].print();
+        }
+#endif
+
     }
     for (int i = 0; i < currrentCodeLength; i++)
     {
         printf("%d ", code[i]);
     }
+    printf("\n");
 }
 
 Enigma::~Enigma()
@@ -117,48 +99,62 @@ Enigma::~Enigma()
     reflector.~Reflector();
     delete[] rotors;
     rotors = nullptr;
-    delete message;
+    delete[] message;
     message = nullptr;
-    delete code;
+    delete[] code;
     code = nullptr;
 }
 
-void Enigma::SetOneNumber()
+void Enigma::moveRotors()
 {
-    for (int i = rotorsNumber - 1; i > 0; i--)
+    int index = rotorsNumber - 1;
+    if (index > MAX_MOVING_ROTOR_INDEX)
     {
-        rotors[i].rotate(rotors[i-1]);
-    }
-    rotors[0].setPosition(1);
-
-    int n = message[currrentCodeLength];
-    n = entryWheel.FindIndex(entryWheel.GetBasicAlphabet(), n);
-    for (int i = 0; i < rotorsNumber; i++)
-    {
-        n = rotors[i].CharacteristicToBasic(n);
-    }
-    n = reflector.BasicToCharacteristic(n);
-    for (int i = rotorsNumber - 1; i >= 0; i--)
-    {
-        n = rotors[i].BasicToCharacteristic(n);
-    }
-    n = entryWheel.FindElement(entryWheel.GetBasicAlphabet(), n);
-    code[currrentCodeLength] = n;
-    currrentCodeLength++;
-
-    for (int i = rotorsNumber - 1; i > 0; i--)
-    {
-        rotors[i].didImove = false;
+        index = MAX_MOVING_ROTOR_INDEX;
     }
 
+    for (int j = index; j > 0; j--)
+    {
+        rotors[j].rotate(rotors[j - 1]);
+    }
+    rotors[0].setPosition(1); // Move quickest rotor separately.
 }
 
-int Enigma::messageLength(int* message)
+void Enigma::setOneNumber()
+{
+    int n = message[currrentCodeLength];
+
+#if TEST == true
+    printf("Message: %d\n", n);
+#endif
+
+    n = entryWheel.findIndexBinary(entryWheel.getBasicAlphabet(), n);
+
+#if TEST == true
+    printf("Entry Wheel index: %d\n", n);
+#endif
+
+    for (int i = 0; i < rotorsNumber; i++)
+    {
+        n = rotors[i].characteristicToBasic(n);
+    }
+    n = reflector.characteristicToBasic(n);
+    for (int i = rotorsNumber - 1; i >= 0; i--)
+    {
+        n = rotors[i].basicToCharacteristic(n);
+    }
+    n = entryWheel.findElement(entryWheel.getBasicAlphabet(), n);
+    code[currrentCodeLength] = n;
+    for (int i = rotorsNumber - 1; i > 0; i--)
+    {
+        rotors[i].setDidImove(false);
+    }
+    currrentCodeLength++;
+}
+
+int Enigma::messageLength(int* message) const
 {
     int i = 0;
-    for (i = 0; message[i] != 0; i++)
-    {
-        i++;
-    }
+    for (i = 0; message[i] != 0; i++) {};
     return i;
 }

@@ -25,9 +25,9 @@ void Repository::addRotor(int* characteristicAlphabet)
     rotors[rotorsNumber] = Rotor(alphabetLength, characteristicAlphabet);
 }
 
-void Repository::setRotorTransferPoint(int numberOfRotationTransferPoints, int* rotationTransferPoints)
+void Repository::setRotorTransferPoint(int* rotationTransferPoints)
 {
-    rotors[rotorsNumber].SetRotationTransferPoints(rotationTransferPoints, numberOfRotationTransferPoints);
+    rotors[rotorsNumber].setRotationTransferPoints(rotationTransferPoints);
     rotorsNumber++;
 }
 
@@ -52,4 +52,5 @@ Repository::~Repository()
     alphabetLength = 0;
     rotorsNumber = 0;
     reflectorsNumber = 0;
+
 }

@@ -7,9 +7,11 @@ public:
 	Reflector();
 	Reflector(int n, int* characteristicAlphabet);
 	Reflector(const Reflector& orig);
+	Reflector(Reflector&& other);
 	Reflector& operator=(const Reflector& right);
-	int CharacteristicToBasic(int index);
-	int BasicToCharacteristic(int index);
+	Reflector& operator=(Reflector&& right);
+	int characteristicToBasic(int index);
+
 #if TEST == true
 	void print();
 #endif

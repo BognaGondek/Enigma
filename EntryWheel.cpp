@@ -4,18 +4,27 @@
 
 EntryWheel::EntryWheel() { basicAlphabet = nullptr;	length = 0; };
 
-EntryWheel::EntryWheel(int n) 
+EntryWheel::EntryWheel(int n)
 { 
 	length = n;
 	basicAlphabet = new int[length];
-	basicAlphabet = CreateBasicAlphabet(n); 
+	basicAlphabet = createBasicAlphabet(n); 
 };
 
 EntryWheel::EntryWheel(const EntryWheel& orig)
 {
 	length = orig.length;
 	basicAlphabet = new int[length];
-	basicAlphabet = CreateBasicAlphabet(orig.length);
+	basicAlphabet = createBasicAlphabet(orig.length);
+}
+
+EntryWheel::EntryWheel(EntryWheel&& other)
+{
+	length = other.length;
+	basicAlphabet = new int[length];
+	basicAlphabet = createBasicAlphabet(length);
+	other.length = 0;
+	other.basicAlphabet = nullptr;
 }
 
 EntryWheel& EntryWheel::operator=(const EntryWheel& right)
@@ -26,6 +35,18 @@ EntryWheel& EntryWheel::operator=(const EntryWheel& right)
 	return *this;
 }
 
+EntryWheel& EntryWheel::operator=(EntryWheel&& right)
+{
+	std::swap(basicAlphabet, right.basicAlphabet);
+	std::swap(length, right.length);
+	return *this;
+}
+
+int* EntryWheel::getBasicAlphabet() const
+{
+	return basicAlphabet;
+}
+
 EntryWheel::~EntryWheel()
 {
 	delete[] basicAlphabet;
@@ -34,7 +55,6 @@ EntryWheel::~EntryWheel()
 }
 
 #if TEST == true
-
 void EntryWheel::print()
 {
 	printf("entryWheel:\n");
@@ -44,5 +64,4 @@ void EntryWheel::print()
 	}
 	printf("\n\n");
 }
-
 #endif

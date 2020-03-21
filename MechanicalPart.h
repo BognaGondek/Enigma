@@ -4,12 +4,13 @@
 class MechanicalPart
 {
 public:
-    int FindIndex(int* arr, int element);
-    int FindElement(int* arr, int index);
-    int* basicAlphabet;
+    int findIndex(int* arr, int element) const;
+    int findIndexBinary(int* arr, int element) const;
+    int findElement(int* arr, int index) const;
 protected:
+    int* basicAlphabet;
     int length;
-    int* CreateBasicAlphabet(int n);
-    void copy(int* newArr, int* oldArr, int length);
+    int* createBasicAlphabet(int n);
+    void copy(int* newArr, int* oldArr, int length) const;
     virtual ~MechanicalPart() = 0;
 };

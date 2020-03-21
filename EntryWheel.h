@@ -7,13 +7,14 @@ public:
 	EntryWheel();
 	EntryWheel(int n);
 	EntryWheel(const EntryWheel& orig);
+	EntryWheel(EntryWheel&& other);
 	EntryWheel& operator=(const EntryWheel& right);
-	int* GetBasicAlphabet() const
-	{
-		return basicAlphabet;
-	}
+	EntryWheel& operator=(EntryWheel&& right);
+	int* getBasicAlphabet() const;
 	~EntryWheel();
+
 #if TEST == true
 	void print();
 #endif
+
 };
