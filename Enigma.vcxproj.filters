@@ -15,9 +15,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Enigma.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="MechanicalPart.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -33,7 +30,10 @@
     <ClCompile Include="Repository.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="EnigmaClass.cpp">
+    <ClCompile Include="Main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Enigma.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

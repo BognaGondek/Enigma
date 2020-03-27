@@ -19,7 +19,6 @@ Rotor::Rotor()
 Rotor::Rotor(int n, int* characteristicAlphabet)
 {
 	length = n;
-	basicAlphabet = new int[length];
 	basicAlphabet = createBasicAlphabet(n);
 	this->characteristicAlphabet = new int[length];
 	for (int i = 0; i < length; i++)
@@ -37,7 +36,6 @@ Rotor::Rotor(int n, int* characteristicAlphabet)
 Rotor::Rotor(const Rotor& orig)
 {
 	length = orig.length;
-	basicAlphabet = new int[length];
 	basicAlphabet = createBasicAlphabet(length);
 	characteristicAlphabet = new int[length];
 	copy(characteristicAlphabet, orig.characteristicAlphabet, length);
@@ -53,7 +51,6 @@ Rotor::Rotor(const Rotor& orig)
 Rotor::Rotor(Rotor&& other)
 {
 	length = other.length;
-	basicAlphabet = new int[length];
 	basicAlphabet = createBasicAlphabet(length);
 	characteristicAlphabet = new int[length];
 	copy(characteristicAlphabet, other.characteristicAlphabet, length);
@@ -104,10 +101,13 @@ void Rotor::rotate(Rotor& right)
 	{
 		if (this->didImove == false)
 		{
-			rotateOnePosition();
+			if ((right.secondRotor && right.secMov == true)|| right.firstRotor)
+			{
+				rotateOnePosition();
+			}
 			/* this->didImove = true; */
 		}
-		if (!right.firstRotor)
+		if (!right.firstRotor && right.secMov == true)
 		{
 			right.rotateOnePosition();
 			right.didImove = true;
@@ -227,7 +227,6 @@ Rotor::~Rotor()
 	delete[] rotationTransferPoints;
 	rotationTransferPoints = nullptr;
 	length = 0;
-
 }
 
 #if TEST == true
@@ -254,7 +253,7 @@ void Rotor::print()
 	printf("\n");
 	printf("ratchet: %d \n", isRatchetUncovered);
 	printf("first: %d\n", firstRotor);
-	printf("%d\n\n", numberOfRotations);
+	printf("Number of Rot: %d\n\n", numberOfRotations);
 }
 #endif
 
@@ -275,7 +274,6 @@ bool Rotor::wasRotationPointHit() const
 void Rotor::rotateOnePosition()
 {
 	numberOfRotations += 1;
-	//printf("!!!!%d!!!\n", length);
 	if (numberOfRotations >= length)
 	{
 		while (numberOfRotations >= length)
@@ -287,6 +285,11 @@ void Rotor::rotateOnePosition()
 			}
 		}
 		
+	}
+
+	if (secondRotor == true)
+	{
+		secMov = true;
 	}
 
 	if (isRatchetUncovered == true)

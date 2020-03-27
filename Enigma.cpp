@@ -1,107 +1,182 @@
+﻿#include "Enigma.h"
 #include <iostream>
-#include "Enigma.h"
-#define BUFFER_SIZE 100000
-using namespace std;
 
-int main()
+#define MAX_MOVING_ROTOR_INDEX 2
+
+Enigma::Enigma()
 {
-    ios_base::sync_with_stdio(false);
-    cin.tie(NULL);
+    entryWheel = EntryWheel();
+    reflector = Reflector();
+    rotorsNumber = 0;
+    rotors = nullptr;
+    message = nullptr;
+    messageSize = 0;
+    currrentCodeLength = 0;
+    code = nullptr;
+}
 
-    int index = 1;
+Enigma::Enigma(Repository& repository, int* input)
+{
+    int inputLength = 2 + 2 * input[0];
+    rotorsNumber = input[0];
+    entryWheel = repository.entryWheel;
     
-    int n = 0;
-    int m = 0;
-    cin >> n;
-    cin >> m;
-    Repository repository(n, m);
-    int* charAlp = new int[n];
-    int buffer[BUFFER_SIZE];
+#if TEST == true
+    printf("PREPARING\n");
+    entryWheel.print();
+#endif
 
-    for (int j = 0; j < m; j++)
+    rotors = new Rotor[input[0]];
+    for (int i = 0, j = 1;
+        i < input[0], j < inputLength - 1;
+        i++, j += 2)
     {
-        for (int i = 0; i < n; i++)
+        rotors[i] = repository.rotors[input[j]];
+        rotors[i].setPosition(input[j + 1] - 1);
+        if (i == 0)
         {
-            cin >> charAlp[i];
+            rotors[i].setFirstRotor(true);
         }
-        repository.addRotor(charAlp);
-        
-        for (int i = 0;; i++)
+        rotors[i].setIsRatcherUncovered();
+        if (i == 1)
         {
-            cin >> buffer[i];
-            index = buffer[0];
-            if (i == index)
-            {
-                break;
-            }
+            rotors[i].secondRotor = true;
         }
-        repository.setRotorTransferPoint(buffer);
+
+#if TEST == true
+     rotors[i].print();
+#endif
+
+    }
+    reflector = repository.reflectors[input[inputLength - 1]];
+
+#if TEST == true
+  reflector.print();
+#endif
+
+    message = nullptr;
+    code = nullptr;
+    messageSize = 0;
+    currrentCodeLength = 0;
+}
+
+void Enigma::setMessage(int* message)
+{
+    messageSize = messageLength(message);
+    this->message = new int[messageSize];
+    for (int i = 0; i < messageSize; i++)
+    {
+        this->message[i] = message[i];
+    }
+    code = new int[messageSize];
+}
+
+void Enigma::setCode()
+{   
+    rotors[0].setPosition(1);
+    
+#if TEST == true
+    for (int i = 0; i < 3; i++)
+    {
+        rotors[i].print();
+    }
+#endif
+    setOneNumber();
+    //rotors[0].print();
+    //rotors[1].print();
+    for (int i = 1; i < messageSize; i++)
+    {
+        moveRotors();
+#if TEST == true
+        for (int i = 0; i < 3; i++)
+        {
+
+            rotors[i].print();
+        }
+#endif
+        setOneNumber();
+
+#if TEST == true
+        for (int j = 0; j < rotorsNumber; j++)
+        {
+            this->rotors[j].print();
+        }
+#endif
+
+    }
+    for (int i = 0; i < currrentCodeLength; i++)
+    {
+        printf("%d ", code[i]);
+    }
+    printf("\n");
+}
+
+Enigma::~Enigma()
+{
+    if (rotors != nullptr)
+    {
+        entryWheel.~EntryWheel();
+        reflector.~Reflector();
+    }
+    delete[] rotors;
+    rotors = nullptr;
+    delete[] message;
+    message = nullptr;
+    delete[] code;
+    code = nullptr;
+    rotorsNumber = 0;
+}
+
+void Enigma::moveRotors()
+{
+    int index = rotorsNumber - 1;
+    if (index > MAX_MOVING_ROTOR_INDEX)
+    {
+        index = MAX_MOVING_ROTOR_INDEX;
     }
 
-    int l = 0;
-    cin >> l;
-    repository.preparePlaceForReflectors(l);
-
-    for (int i = 0; i < l; i++)
+    for (int j = index; j > 0; j--)
     {
-        for (int i = 0; i < n; i++)
-        {
-            cin >> charAlp[i];
-        }
-        repository.addReflector(charAlp);
+        rotors[j].rotate(rotors[j - 1]);
     }
-    
-    int p = 0;
-    cin >> p;
-    
-    for (int j = 0; j < p; j++)
-    {
-        index = 1;
-        for (int i = 0; i < index; i++)
-        {
-            cin >> buffer[i];
-            index = buffer[0] * 2 + 2;
-        }
-        Enigma new_enigma{ repository, buffer };
-        
-        for (int i = 0;; i++)
-        {
-            cin >> buffer[i];
-            if (buffer[i] == 0)
-            {
-                break;
-            }
-        }
-        new_enigma.setMessage(buffer);
-        new_enigma.setCode();
-    }
-    
-    /*
-    Repository repository(6, 2);
-    int intAlphabet[6] = { 5, 1, 6, 4, 2, 3 };
-    int firstAlp[6] = { 2, 1, 5, 6, 3, 4 };
-    //int secAlp[4] = { 4, 3, 2, 1 };
-    int blabla[6] = { 6, 5, 2, 1, 3, 4 };
-   // int anotherblabla[4] = { 4, 3, 1, 2 };
-    repository.addRotor(intAlphabet);
-    int rotPoint[2] = { 1, 2 };
-    repository.setRotorTransferPoint(rotPoint);
-    repository.addRotor(blabla);
-    repository.setRotorTransferPoint(rotPoint);
- 
-    repository.preparePlaceForReflectors(1);
-    repository.addReflector(firstAlp);
-    //repository.addReflector(secAlp);
-    //repository.addReflector(intAlphabet);
-    int input[8] = { 2, 0, 1, 1, 1, 0 };
-    Enigma enigma(repository, input);
-    int message[2] = { 5, 0 };
-    enigma.setMessage(message);
-    printf("Counting starts... \n");
-    enigma.setCode();
-    int y = 2;
-    system("pause");
-    */
+    rotors[0].setPosition(1); // Move quickest rotor separately.
+}
 
-    return 0;
+void Enigma::setOneNumber()
+{
+    int n = message[currrentCodeLength];
+
+#if TEST == true
+    printf("Message: %d\n", n);
+#endif
+
+    n = entryWheel.findIndexBinary(entryWheel.getBasicAlphabet(), n);
+
+#if TEST == true
+    printf("Entry Wheel index: %d\n", n);
+#endif
+
+    for (int i = 0; i < rotorsNumber; i++)
+    {
+        n = rotors[i].characteristicToBasic(n);
+    }
+    n = reflector.characteristicToBasic(n);
+    for (int i = rotorsNumber - 1; i >= 0; i--)
+    {
+        n = rotors[i].basicToCharacteristic(n);
+    }
+    n = entryWheel.findElement(entryWheel.getBasicAlphabet(), n);
+    code[currrentCodeLength] = n;
+    for (int i = rotorsNumber - 1; i > 0; i--)
+    {
+        rotors[i].setDidImove(false);
+    }
+    currrentCodeLength++;
+}
+
+int Enigma::messageLength(int* message) const
+{
+    int i = 0;
+    for (i = 0; message[i] != 0; i++) {};
+    return i;
 }

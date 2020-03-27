@@ -26,7 +26,9 @@ public:
 #if TEST == true
 	void print();
 #endif
-
+	
+	bool secondRotor = false;
+	bool secMov = false;
 private:
 	int numberOfRotations;
 	int* characteristicAlphabet;

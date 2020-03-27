@@ -1,5 +1,6 @@
 #include "Repository.h"
 #include <iostream>
+
 Repository::Repository()
 {
     alphabetLength = 0;
@@ -13,7 +14,7 @@ Repository::Repository()
 Repository::Repository(int n, int m)
 {
     alphabetLength = n;
-    entryWheel = EntryWheel(n);
+    entryWheel = std::move(EntryWheel(n));
     rotors = new Rotor[m];
     reflectors = nullptr;
     rotorsNumber = 0;
@@ -22,7 +23,7 @@ Repository::Repository(int n, int m)
 
 void Repository::addRotor(int* characteristicAlphabet)
 {
-    rotors[rotorsNumber] = Rotor(alphabetLength, characteristicAlphabet);
+    rotors[rotorsNumber] = std::move(Rotor(alphabetLength, characteristicAlphabet));
 }
 
 void Repository::setRotorTransferPoint(int* rotationTransferPoints)
@@ -38,7 +39,7 @@ void Repository::preparePlaceForReflectors(int l)
 
 void Repository::addReflector(int* characteristicAlphabet)
 {
-    reflectors[reflectorsNumber] = Reflector(alphabetLength, characteristicAlphabet);
+    reflectors[reflectorsNumber] = std::move(Reflector(alphabetLength, characteristicAlphabet));
     reflectorsNumber++;
 }
 
@@ -52,5 +53,4 @@ Repository::~Repository()
     alphabetLength = 0;
     rotorsNumber = 0;
     reflectorsNumber = 0;
-
 }

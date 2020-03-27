@@ -11,8 +11,7 @@ Reflector::Reflector()
 Reflector::Reflector(int n, int* characteristicAlphabet)
 {
 	length = n;
-	basicAlphabet = new int[length];
-	basicAlphabet = createBasicAlphabet(length);
+	basicAlphabet = createBasicAlphabet(n);
 	this->characteristicAlphabet = new int[length];
 	for (int i = 0; i < length; i++)
 	{
@@ -23,7 +22,6 @@ Reflector::Reflector(int n, int* characteristicAlphabet)
 Reflector::Reflector(const Reflector& orig)
 {
 	length = orig.length;
-	basicAlphabet = new int[length];
 	basicAlphabet = createBasicAlphabet(length);
 	characteristicAlphabet = new int[length];
 	for (int i = 0; i < length; i++)
@@ -35,7 +33,6 @@ Reflector::Reflector(const Reflector& orig)
 Reflector::Reflector(Reflector&& other)
 {
 	length = other.length;
-	basicAlphabet = new int[length];
 	basicAlphabet = createBasicAlphabet(length);
 	characteristicAlphabet = new int[length];
 	for (int i = 0; i < length; i++)
@@ -101,9 +98,9 @@ void Reflector::print()
 
 Reflector::~Reflector()
 {
-	length = 0;
 	delete[] characteristicAlphabet;
 	characteristicAlphabet = nullptr;
 	delete[] basicAlphabet;
 	basicAlphabet = nullptr;
+	length = 0;
 }

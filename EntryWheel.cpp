@@ -7,21 +7,18 @@ EntryWheel::EntryWheel() { basicAlphabet = nullptr;	length = 0; };
 EntryWheel::EntryWheel(int n)
 { 
 	length = n;
-	basicAlphabet = new int[length];
 	basicAlphabet = createBasicAlphabet(n); 
 };
 
 EntryWheel::EntryWheel(const EntryWheel& orig)
 {
 	length = orig.length;
-	basicAlphabet = new int[length];
-	basicAlphabet = createBasicAlphabet(orig.length);
+	basicAlphabet = createBasicAlphabet(length);
 }
 
 EntryWheel::EntryWheel(EntryWheel&& other)
 {
 	length = other.length;
-	basicAlphabet = new int[length];
 	basicAlphabet = createBasicAlphabet(length);
 	other.length = 0;
 	other.basicAlphabet = nullptr;

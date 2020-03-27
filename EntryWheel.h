@@ -12,7 +12,6 @@ public:
 	EntryWheel& operator=(EntryWheel&& right);
 	int* getBasicAlphabet() const;
 	~EntryWheel();
-
 #if TEST == true
 	void print();
 #endif
