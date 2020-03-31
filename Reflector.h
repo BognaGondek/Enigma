@@ -10,13 +10,14 @@ public:
 	Reflector(Reflector&& other);
 	Reflector& operator=(const Reflector& right);
 	Reflector& operator=(Reflector&& right);
-	int characteristicToBasic(int index);
+	~Reflector();
+
+	int characteristicToBasic(int index) const;
 
 #if TEST == true
 	void print();
 #endif
 
-	~Reflector();
 private:
 	int* characteristicAlphabet;
 };

@@ -155,7 +155,8 @@
     <ClCompile Include="MechanicalPart.cpp" />
     <ClCompile Include="Reflector.cpp" />
     <ClCompile Include="Repository.cpp" />
-    <ClCompile Include="Rotor.cpp" />
+    <ClCompile Include="RotorLogic.cpp" />
+    <ClCompile Include="RotorConstDeconst.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Enigma.h" />

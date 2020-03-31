@@ -6,18 +6,19 @@
 class Repository
 {
 public:
-    EntryWheel entryWheel;
-    Rotor* rotors;
-    Reflector* reflectors;
     int alphabetLength;
     int rotorsNumber;
     int reflectorsNumber;
+    EntryWheel entryWheel;
+    Rotor* rotors;
+    Reflector* reflectors;
 
     Repository();
     Repository(int n, int m);
+    ~Repository();
+
     void addRotor(int* characteristicAlphabet);
     void setRotorTransferPoint(int* rotationTransferPoints);
     void preparePlaceForReflectors(int l);
     void addReflector(int* characteristicAlphabet);
-    ~Repository();
 };

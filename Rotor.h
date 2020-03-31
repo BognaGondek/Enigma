@@ -7,38 +7,37 @@ public:
 	Rotor();
 	Rotor(int n, int* characteristicAlphabet);
 	Rotor(const Rotor& orig);
-	Rotor(Rotor&& other);
+	Rotor(Rotor&& orig);
 	Rotor& operator=(const Rotor& right);
 	Rotor& operator=(Rotor&& right);
+	~Rotor();
 
-	void rotate(Rotor& right);
-	int characteristicToBasic(int index);
+	void rotateSecondRotor(Rotor& first);
+	void rotateThirdAndSecondRotor(Rotor& second);
+	int characteristicToBasic(int index) const;
 	int basicToCharacteristic(int index);
 	
-	void setPosition(int numberOfTimes);
-	void setFirstRotor(bool firstRotor);
-	void setIsRatcherUncovered();
-	void setRotationTransferPoints(int* rotationTransferPoints);
-	void setDidImove(bool didImove);
-
-	~Rotor();
+	void setPosition(int position);
+	void rotateSeparately();
+	void setFirstRotor();
+	void setSecondRotor();
+	void setNotch();
+	void setRotationTransferPoints(int* rotTraPoint);
 
 #if TEST == true
 	void print();
 #endif
-	
-	bool secondRotor = false;
-	bool secMov = false;
+	bool didIMoveOnceAlready;
+	bool didIRotate;
 private:
 	int numberOfRotations;
 	int* characteristicAlphabet;
 	int* rotationTransferPoints;
 	int numberOfRotationTransferPoints;
 	bool firstRotor;
-	bool isRatchetUncovered;
-	bool didImove;
-
-	bool wasRotationPointHit() const;
-	void rotateOnePosition();
+	bool secondRotor;
+	bool isNotchUncovered;
+	
+	void initVar();
 	void setRotationTransferPoint(int index, int element);
 };

@@ -61,15 +61,15 @@ Reflector& Reflector::operator=(Reflector&& right)
 	return *this;
 }
 
-int Reflector::characteristicToBasic(int index)
+int Reflector::characteristicToBasic(int index) const
 {
-	int n = findElement(characteristicAlphabet, index);
+	int n = characteristicAlphabet[index];
 
 #if TEST == true
 	printf(" Reflector:\n found element: %d\n", n);
 #endif
 
-	n = findIndexBinary(basicAlphabet, n);
+	n = n - 1;
 
 #if TEST == true
 	printf("Index: %d\n\n", n);
@@ -102,5 +102,4 @@ Reflector::~Reflector()
 	characteristicAlphabet = nullptr;
 	delete[] basicAlphabet;
 	basicAlphabet = nullptr;
-	length = 0;
 }

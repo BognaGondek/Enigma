@@ -1,20 +1,17 @@
 #include "Repository.h"
 #include <iostream>
 
-Repository::Repository()
+Repository::Repository() : entryWheel(EntryWheel())
 {
     alphabetLength = 0;
-    entryWheel = EntryWheel();
     rotors = nullptr;
     reflectors = nullptr;
     rotorsNumber = 0;
     reflectorsNumber = 0;
 }
 
-Repository::Repository(int n, int m)
+Repository::Repository(int n, int m) : alphabetLength(n), entryWheel(std::move(EntryWheel(n)))
 {
-    alphabetLength = n;
-    entryWheel = std::move(EntryWheel(n));
     rotors = new Rotor[m];
     reflectors = nullptr;
     rotorsNumber = 0;
@@ -50,7 +47,4 @@ Repository::~Repository()
     rotors = nullptr;
     delete[] reflectors;
     reflectors = nullptr;
-    alphabetLength = 0;
-    rotorsNumber = 0;
-    reflectorsNumber = 0;
 }
