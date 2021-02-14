@@ -4,16 +4,16 @@
 class EntryWheel : public MechanicalPart
 {
 public:
-	EntryWheel();
-	EntryWheel(int n);
-	EntryWheel(const EntryWheel& orig);
-	EntryWheel(EntryWheel&& other);
-	EntryWheel& operator=(const EntryWheel& right);
-	EntryWheel& operator=(EntryWheel&& right);
-	~EntryWheel();
+    EntryWheel();
+    EntryWheel(int n);
+    EntryWheel(const EntryWheel& orig);
+    EntryWheel(EntryWheel&& other);
+    EntryWheel& operator=(const EntryWheel& right);
+    EntryWheel& operator=(EntryWheel&& right);
+    ~EntryWheel();
 
 #if TEST == true
-	void print();
+    void print();
 #endif
 
 };

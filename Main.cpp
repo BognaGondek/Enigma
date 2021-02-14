@@ -1,6 +1,5 @@
 #include <iostream>
 #include "Enigma.h"
-//#include <vld.h>
 #define BUFFER_SIZE 100000
 using namespace std;
 
@@ -10,22 +9,22 @@ int main()
     int rotorsNumber = 0;
     scanf_s("%d", &alphabetLength);
     scanf_s("%d", &rotorsNumber);
-    
+
     Repository repository(alphabetLength, rotorsNumber);
-    
-    int* charAlp = new int[alphabetLength]; // characteristic alphabet
+
+    int* charAlp = new int[alphabetLength];
     int buffer[BUFFER_SIZE];
     int index = 1;
     int i = 0;
 
-    while(rotorsNumber != 0)
+    while (rotorsNumber != 0)
     {
         for (i = 0; i < alphabetLength; i++)
         {
             scanf_s("%d", &charAlp[i]);
         }
         repository.addRotor(charAlp);
-        
+
         for (i = 0;; i++)
         {
             scanf_s("%d", &buffer[i]);
@@ -38,11 +37,11 @@ int main()
         repository.setRotorTransferPoint(buffer);
         rotorsNumber--;
     }
-    
+
     int reflectorsNumber = 0;
     scanf_s("%d", &reflectorsNumber);
     repository.preparePlaceForReflectors(reflectorsNumber);
-    while(reflectorsNumber != 0)
+    while (reflectorsNumber != 0)
     {
         for (i = 0; i < alphabetLength; i++)
         {
@@ -51,10 +50,10 @@ int main()
         repository.addReflector(charAlp);
         reflectorsNumber--;
     }
-    
+
     int taskNumber = 0;
     scanf_s("%d", &taskNumber);
-    while(taskNumber != 0)
+    while (taskNumber != 0)
     {
         index = 1;
         for (i = 0; i < index; i++)
@@ -62,7 +61,7 @@ int main()
             scanf_s("%d", &buffer[i]);
             index = buffer[0] * 2 + 2;
         }
-        Enigma newEnigma( repository, buffer );
+        Enigma newEnigma(repository, buffer);
         for (i = 0;; i++)
         {
             scanf_s("%d", &buffer[i]);
@@ -75,7 +74,7 @@ int main()
         newEnigma.setCode();
         taskNumber--;
     }
-    
+
     delete[] charAlp;
     return 0;
 }

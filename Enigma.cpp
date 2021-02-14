@@ -19,24 +19,13 @@ Enigma::Enigma(Repository& repository, int* input) : entryWheel(std::move(reposi
 {
     int inputLength = 2 + 2 * input[0];
     rotorsNumber = input[0];
-    
-#if TEST == true
-    printf("PREPARING\n");
-    entryWheel.print();
-#endif
-
     rotors = new Rotor[rotorsNumber];
-    
+
     for (int i = 0, j = 1; i < rotorsNumber; i++, j = j + 2)
     {
         rotors[i] = repository.rotors[input[j]];
         rotors[i].setPosition(input[j + 1] - 1);
         rotors[i].setNotch();
-
-#if TEST == true
-     //rotors[i].print();
-#endif
-
     }
     rotors[0].setFirstRotor();
     if (rotorsNumber >= 2)
@@ -44,11 +33,6 @@ Enigma::Enigma(Repository& repository, int* input) : entryWheel(std::move(reposi
         rotors[1].setSecondRotor();
     }
     reflector = repository.reflectors[input[inputLength - 1]];
-
-#if TEST == true
-  reflector.print();
-#endif
-
     message = nullptr;
     code = nullptr;
     messageSize = 0;
@@ -67,7 +51,7 @@ void Enigma::setMessage(int* mess)
 }
 
 void Enigma::setCode()
-{   
+{
     rotateFirstAndSetOneNumber();
     switch (rotorsNumber)
     {
@@ -118,14 +102,6 @@ void Enigma::setOneNumber()
 {
     int n = message[currrentCodeLength] - 1;
 
-#if TEST == true
-    printf("Message index: %d\n", n);
-#endif
-
-#if TEST == true
-    printf("Entry Wheel index: %d\n", n);
-#endif
-
     for (int i = 0; i < rotorsNumber; i++)
     {
         n = rotors[i].characteristicToBasic(n);
@@ -137,7 +113,6 @@ void Enigma::setOneNumber()
     }
     n = n + 1;
     printf("%d ", n);
-    //code[currrentCodeLength] = n;
     currrentCodeLength++;
 }
 

@@ -3,103 +3,75 @@
 
 Reflector::Reflector()
 {
-	basicAlphabet = nullptr;
-	characteristicAlphabet = nullptr;
-	length = 0;
+    basicAlphabet = nullptr;
+    characteristicAlphabet = nullptr;
+    length = 0;
 }
 
 Reflector::Reflector(int n, int* characteristicAlphabet)
 {
-	length = n;
-	basicAlphabet = createBasicAlphabet(n);
-	this->characteristicAlphabet = new int[length];
-	for (int i = 0; i < length; i++)
-	{
-		this->characteristicAlphabet[i] = characteristicAlphabet[i];
-	}
+    length = n;
+    basicAlphabet = createBasicAlphabet(n);
+    this->characteristicAlphabet = new int[length];
+    for (int i = 0; i < length; i++)
+    {
+        this->characteristicAlphabet[i] = characteristicAlphabet[i];
+    }
 }
 
 Reflector::Reflector(const Reflector& orig)
 {
-	length = orig.length;
-	basicAlphabet = createBasicAlphabet(length);
-	characteristicAlphabet = new int[length];
-	for (int i = 0; i < length; i++)
-	{
-		characteristicAlphabet[i] = orig.characteristicAlphabet[i];
-	}
+    length = orig.length;
+    basicAlphabet = createBasicAlphabet(length);
+    characteristicAlphabet = new int[length];
+    for (int i = 0; i < length; i++)
+    {
+        characteristicAlphabet[i] = orig.characteristicAlphabet[i];
+    }
 }
 
 Reflector::Reflector(Reflector&& other)
 {
-	length = other.length;
-	basicAlphabet = createBasicAlphabet(length);
-	characteristicAlphabet = new int[length];
-	for (int i = 0; i < length; i++)
-	{
-		characteristicAlphabet[i] = other.characteristicAlphabet[i];
-	}
-	other.basicAlphabet = nullptr;
-	other.characteristicAlphabet = nullptr;
-	other.length = 0;
+    length = other.length;
+    basicAlphabet = createBasicAlphabet(length);
+    characteristicAlphabet = new int[length];
+    for (int i = 0; i < length; i++)
+    {
+        characteristicAlphabet[i] = other.characteristicAlphabet[i];
+    }
+    other.basicAlphabet = nullptr;
+    other.characteristicAlphabet = nullptr;
+    other.length = 0;
 }
 
 Reflector& Reflector::operator=(const Reflector& right)
 {
-	Reflector reflector = right;
-	std::swap(basicAlphabet, reflector.basicAlphabet);
-	std::swap(characteristicAlphabet, reflector.characteristicAlphabet);
-	std::swap(length, reflector.length);
-	return *this;
+    Reflector reflector = right;
+    std::swap(basicAlphabet, reflector.basicAlphabet);
+    std::swap(characteristicAlphabet, reflector.characteristicAlphabet);
+    std::swap(length, reflector.length);
+    return *this;
 }
 
 Reflector& Reflector::operator=(Reflector&& right)
 {
-	std::swap(basicAlphabet, right.basicAlphabet);
-	std::swap(characteristicAlphabet, right.characteristicAlphabet);
-	std::swap(length, right.length);
-	return *this;
+    std::swap(basicAlphabet, right.basicAlphabet);
+    std::swap(characteristicAlphabet, right.characteristicAlphabet);
+    std::swap(length, right.length);
+    return *this;
 }
 
 int Reflector::characteristicToBasic(int index) const
 {
-	int n = characteristicAlphabet[index];
-
-#if TEST == true
-	printf(" Reflector:\n found element: %d\n", n);
-#endif
-
-	n = n - 1;
-
-#if TEST == true
-	printf("Index: %d\n\n", n);
-#endif
-
-	return n;
+    int n = characteristicAlphabet[index];
+    n = n - 1;
+    return n;
 }
-
-#if TEST == true
-void Reflector::print()
-{
-	printf("Reflector:\n");
-	printf("Basic:\n");
-	for (int i = 0; i < length; i++)
-	{
-		printf("%d ", basicAlphabet[i]);
-	}
-	printf("\nChar:\n");
-	for (int i = 0; i < length; i++)
-	{
-		printf("%d ", characteristicAlphabet[i]);
-	}
-	printf("\n\n");
-}
-#endif
 
 Reflector::~Reflector()
 {
-	delete[] characteristicAlphabet;
-	characteristicAlphabet = nullptr;
-	delete[] basicAlphabet;
-	basicAlphabet = nullptr;
+    delete[] characteristicAlphabet;
+    characteristicAlphabet = nullptr;
+    delete[] basicAlphabet;
+    basicAlphabet = nullptr;
 }

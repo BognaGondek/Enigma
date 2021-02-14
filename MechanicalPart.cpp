@@ -1,6 +1,5 @@
 #include "MechanicalPart.h"
 #include <iostream>
-#include "Tests.h"
 
 int MechanicalPart::findIndex(int* arr, int element) const
 {
@@ -27,7 +26,7 @@ void MechanicalPart::copy(int* newArr, int* oldArr, int len)
 {
     for (int i = 0; i < len; i++)
     {
-        newArr[i] = oldArr[i]; 
+        newArr[i] = oldArr[i];
     }
 }
 
